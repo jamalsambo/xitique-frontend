@@ -578,7 +578,7 @@ $border: #e5e7eb;
     transition: color 0.3s ease;
 
     &:hover {
-      color: darken($primary, 10%);
+      color: #0055aa;
       text-decoration: underline;
     }
   }

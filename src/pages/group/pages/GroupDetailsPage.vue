@@ -340,7 +340,7 @@ const paidLoadForm = ref({
 const installmentAmount = ref(0);
 const installmentNumber = ref(0);
 const installmentLoanId = ref('');
-const installmentStatus = ref(null);
+const installmentStatus = ref('');
 
 // Rules Modal
 const showGroupRulesModal = ref(false);
@@ -407,11 +407,14 @@ const loadUserFinancialStats = async () => {
     if (stats) {
       userFinancialStats.value = stats;
     }
-  } catch (error) {
-    console.error(
-      'Erro ao carregar estatísticas financeiras do usuário:',
-      error
-    );
+  } catch (error: unknown) {
+    // Garantir que error é uma instância de Error
+    if (error instanceof Error) {
+      notifyError(error.message);
+    } else {
+      // Caso seja outro tipo (string, object, etc)
+      notifyError(String(error));
+    }
   }
 };
 
@@ -420,8 +423,14 @@ const loadUserItems = async () => {
   try {
     await payoutScheduleStore.fetchUserItem(id);
     userItems.value = payoutScheduleStore.userItems;
-  } catch (error) {
-    console.error('Erro ao carregar itens:', error);
+  } catch (error: unknown) {
+     // Garantir que error é uma instância de Error
+    if (error instanceof Error) {
+      notifyError(error.message);
+    } else {
+      // Caso seja outro tipo (string, object, etc)
+      notifyError(String(error));
+    }
   }
 };
 
@@ -453,9 +462,14 @@ const addNewItem = async () => {
     userItems.value.push(item);
     resetItemsForm();
     notifySuccess('Item adicionado com sucesso!');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    notifyError(error.message || 'Erro ao adicionar item');
+  } catch (error: unknown) {
+    // Garantir que error é uma instância de Error
+    if (error instanceof Error) {
+      notifyError(error.message);
+    } else {
+      // Caso seja outro tipo (string, object, etc)
+      notifyError(String(error));
+    }
   }
 };
 
@@ -464,9 +478,14 @@ const removeItem = async (index: number, itemId: string) => {
     await payoutScheduleStore.removeUserItem(itemId);
     userItems.value.splice(index, 1);
     notifySuccess('Item removido!');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    notifyError(error.message || 'Erro ao remover item');
+  } catch (error: unknown) {
+    // Garantir que error é uma instância de Error
+    if (error instanceof Error) {
+      notifyError(error.message);
+    } else {
+      // Caso seja outro tipo (string, object, etc)
+      notifyError(String(error));
+    }
   }
 };
 
@@ -474,8 +493,14 @@ const saveItems = async () => {
   try {
     notifySuccess('Itens salvos com sucesso!');
     showMyItemsModal.value = false;
-  } catch (error) {
-    notifyError('Erro ao salvar itens');
+  } catch (error: unknown) {
+    // Garantir que error é uma instância de Error
+    if (error instanceof Error) {
+      notifyError(error.message);
+    } else {
+      // Caso seja outro tipo (string, object, etc)
+      notifyError(String(error));
+    }
   }
 };
 
@@ -522,9 +547,14 @@ const addMemberToGroup = async (memberId: string) => {
     notifySuccess('Membro adicionado com sucesso!');
     showAddMemberModal.value = false;
     resetAddMemberForm();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    notifyError(error.message || 'Erro ao adicionar membro');
+  } catch (error: unknown) {
+     // Garantir que error é uma instância de Error
+    if (error instanceof Error) {
+      notifyError(error.message);
+    } else {
+      // Caso seja outro tipo (string, object, etc)
+      notifyError(String(error));
+    }
   }
 };
 
@@ -567,9 +597,14 @@ const submitLoanRequest = async () => {
     notifySuccess('Empréstimo solicitado com sucesso!');
     showLoanModal.value = false;
     resetLoanForm();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    notifyError(error.message || 'Erro ao solicitar empréstimo');
+  } catch (error: unknown) {
+    // Garantir que error é uma instância de Error
+    if (error instanceof Error) {
+      notifyError(error.message);
+    } else {
+      // Caso seja outro tipo (string, object, etc)
+      notifyError(String(error));
+    }
   }
 };
 
@@ -593,12 +628,25 @@ const changeLoanStatus = async () => {
     showLoanModal.value = false;
     resetLoanForm();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    notifyError(error.message || 'Erro ao solicitar empréstimo');
+  } catch (error: unknown) {
+     // Garantir que error é uma instância de Error
+    if (error instanceof Error) {
+      notifyError(error.message);
+    } else {
+      // Caso seja outro tipo (string, object, etc)
+      notifyError(String(error));
+    }
   }
 };
 
-const selectedRowPaidLoan = ({ loanId, amount, number, status }: any) => {
+interface LoanInstallment {
+  loanId: string;
+  amount: number;
+  number: number;
+  status: string ; // ou 'Pago' | 'Pendente' se tiver enum
+}
+
+const selectedRowPaidLoan = ({ loanId, amount, number, status }: LoanInstallment) => {
   showPaidLoadModal.value = true;
   installmentAmount.value = amount;
   installmentNumber.value = number;
@@ -633,9 +681,14 @@ const handledPayCycle = async (cycle: { cycleNumber: number }) => {
   try {
     await paymentStore.create({ cycle_number: cycle.cycleNumber });
     notifySuccess('Pagamento enviando, aguarde a aprovação do gestor');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    notifyError(error);
+  } catch (error: unknown) {
+    // Garantir que error é uma instância de Error
+    if (error instanceof Error) {
+      notifyError(error.message);
+    } else {
+      // Caso seja outro tipo (string, object, etc)
+      notifyError(String(error));
+    }
   }
 };
 
@@ -644,9 +697,14 @@ const handledPayConfirmation = async (cycle: { paymentId: string }) => {
     await paymentStore.update(cycle.paymentId, { status: 'Pago' });
     notifySuccess('Pagamento confirmado');
     await paymentStore.fetchPaymentCycles(id);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    notifyError(error);
+  } catch (error: unknown) {
+    // Garantir que error é uma instância de Error
+    if (error instanceof Error) {
+      notifyError(error.message);
+    } else {
+      // Caso seja outro tipo (string, object, etc)
+      notifyError(String(error));
+    }
   }
 };
 

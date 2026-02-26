@@ -434,7 +434,7 @@ const maskPhone = (phone: string): string => {
 
 const handleRequestCode = async () => {
   try {
-    const result = await auth.forgotPassword(form.value.phone);
+   await auth.forgotPassword(form.value.phone);
 
     // Sucesso - ir para passo 2 (OTP)
     currentStep.value = 2;
@@ -537,7 +537,7 @@ const handleResetPassword = async () => {
   try {
     const otp = otpDigits.value.join('');
 
-    const result = await auth.resetPassword(otp, form.value.newPassword);
+    await auth.resetPassword(otp, form.value.newPassword);
 
     // Sucesso - ir para passo 4 (Confirmação)
     currentStep.value = 4;

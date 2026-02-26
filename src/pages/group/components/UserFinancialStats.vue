@@ -167,7 +167,7 @@
 
 <script setup>
 
-const props = defineProps({
+defineProps({
   user: {
     type: Object,
     required: true,
