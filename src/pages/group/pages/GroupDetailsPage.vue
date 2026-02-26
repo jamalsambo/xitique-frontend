@@ -617,7 +617,7 @@ const onSave = async () => {
       };
       await loanStore.createLoanPayment(installmentLoanId.value, body);
     } else {
-      await loanStore.updateLoanPayment(installmentStatus.value.id, {
+      await loanStore.updateLoanPayment(installmentLoanId.value, {
         status: paidLoadForm.value.status,
       });
     }
