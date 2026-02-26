@@ -7,8 +7,11 @@ module.exports = {
 
   overrides: [
     {
-      files: ['custom-service-worker.ts'],
-
+      files: ['*.ts', '*.tsx'],
+      parserOptions: {
+        project: ['./tsconfig.json'],
+        tsconfigRootDir: __dirname,
+      },
       env: {
         serviceworker: true,
       },
