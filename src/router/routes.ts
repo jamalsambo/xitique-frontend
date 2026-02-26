@@ -40,7 +40,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/forgot-password',
-    component: () => import('src/pages/auth/pages/ForgotPasswordPage.vue'),
+    component: () => import('@/pages/auth/pages/ForgotPasswordPage.vue'),
     meta: { guestOnly: true },
   },
   // Always leave this as last one,
