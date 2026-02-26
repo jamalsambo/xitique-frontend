@@ -10,9 +10,9 @@ module.exports = {
   parserOptions: {
     tsconfigRootDir: __dirname, // garante que o root seja o .eslintrc.js
     project: './tsconfig.json', // caminh
-    parser: require.resolve('@typescript-eslint/parser'),
     extraFileExtensions: ['.vue'],
   },
+   ignorePatterns: ['.eslintrc.js'], // <--- IGNORA este arquivo
 
   env: {
     browser: true,

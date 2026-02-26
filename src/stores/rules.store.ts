@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { api } from 'boot/axios';
 
-interface Rule {
+export interface Rule {
   name: string;
   enabled: boolean;
   id: string;
