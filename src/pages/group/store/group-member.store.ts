@@ -2,11 +2,19 @@
 import { defineStore } from 'pinia';
 import { api } from 'boot/axios';
 
+export interface Member {
+  member_id: string;
+  user_id: string;
+  name?: string; // opcional, caso tenha
+  role?: string; // opcional, caso tenha
+  is_active?: boolean;
+}
+
 export const useGroupMemberStore = defineStore('group-member', {
   state: () => ({
     loading: false,
 
-    groupMembers: [] as unknown[],
+    groupMembers: [] as Member[],
 
     error: null as string | null,
   }),

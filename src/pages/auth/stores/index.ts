@@ -7,6 +7,7 @@ import { LocalStorage } from 'quasar';
 interface User {
   id: string;
   role: string;
+  name: string
 }
 
 export interface Log {

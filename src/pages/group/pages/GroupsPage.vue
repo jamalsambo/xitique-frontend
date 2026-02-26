@@ -6,7 +6,10 @@
         <div class="gradient-bg"></div>
 
         <!-- Header Section -->
-        <div class="header-section q-mb-lg" style="position: relative; z-index: 10">
+        <div
+          class="header-section q-mb-lg"
+          style="position: relative; z-index: 10"
+        >
           <div class="row items-center justify-between">
             <div>
               <h1 class="page-title">Meus Grupos</h1>
@@ -26,7 +29,10 @@
         </div>
 
         <!-- Filters & Search Section -->
-        <div class="filters-section q-mb-lg" style="position: relative; z-index: 10">
+        <div
+          class="filters-section q-mb-lg"
+          style="position: relative; z-index: 10"
+        >
           <q-card class="filters-card">
             <q-card-section class="q-pa-md">
               <div class="row q-col-gutter-md items-center">
@@ -134,17 +140,18 @@
         </div>
 
         <!-- Groups Grid -->
-        <div v-if="filteredAndSortedGroups.length > 0" class="groups-section" style="position: relative; z-index: 10">
+        <div
+          v-if="filteredAndSortedGroups.length > 0"
+          class="groups-section"
+          style="position: relative; z-index: 10"
+        >
           <div class="row q-col-gutter-lg">
             <div
               v-for="(group, index) in paginatedGroups"
               :key="group.id"
               class="col-12 col-sm-6 col-lg-4"
             >
-              <q-card
-                class="group-card"
-                @click="goToDetails(group.id)"
-              >
+              <q-card class="group-card" @click="goToDetails(group.id)">
                 <!-- Card Header with Status Badge -->
                 <div class="card-header">
                   <q-avatar
@@ -178,7 +185,9 @@
                     <div class="info-label">Membros</div>
                     <div class="info-value">
                       {{ group.totalMembers }}
-                      <span class="info-sublabel">({{ group.paidMembers }} pagaram)</span>
+                      <span class="info-sublabel"
+                        >({{ group.paidMembers }} pagaram)</span
+                      >
                     </div>
                   </div>
 
@@ -253,9 +262,11 @@
               <q-icon name="folder_open" size="80px" class="empty-icon" />
               <h3 class="empty-title">Nenhum Grupo Encontrado</h3>
               <p class="empty-message">
-                {{ searchQuery || selectedStatus
-                  ? "Nenhum grupo corresponde aos filtros selecionados"
-                  : "Você ainda não tem nenhum grupo. Crie um novo para começar!" }}
+                {{
+                  searchQuery || selectedStatus
+                    ? 'Nenhum grupo corresponde aos filtros selecionados'
+                    : 'Você ainda não tem nenhum grupo. Crie um novo para começar!'
+                }}
               </p>
               <q-btn
                 unelevated
@@ -342,7 +353,8 @@ const filteredAndSortedGroups = computed(() => {
     const matchesSearch = group.name
       .toLowerCase()
       .includes(searchQuery.value.toLowerCase());
-    const matchesStatus = !selectedStatus.value ||
+    const matchesStatus =
+      !selectedStatus.value ||
       group.status?.toLowerCase() === selectedStatus.value;
     return matchesSearch && matchesStatus;
   });
@@ -360,7 +372,8 @@ const filteredAndSortedGroups = computed(() => {
       break;
     case 'recent':
     default:
-      filtered.sort((a, b) => b.id - a.id);
+      // Como ID é string, ordenar lexicograficamente
+      filtered.sort((a, b) => b.id.localeCompare(a.id));
   }
 
   return filtered;
@@ -370,12 +383,13 @@ const totalPages = computed(() =>
   Math.ceil(filteredAndSortedGroups.value.length / ITEMS_PER_PAGE)
 );
 
-const startIndex = computed(
-  () => (currentPage.value - 1) * ITEMS_PER_PAGE
-);
+const startIndex = computed(() => (currentPage.value - 1) * ITEMS_PER_PAGE);
 
 const endIndex = computed(() =>
-  Math.min(currentPage.value * ITEMS_PER_PAGE, filteredAndSortedGroups.value.length)
+  Math.min(
+    currentPage.value * ITEMS_PER_PAGE,
+    filteredAndSortedGroups.value.length
+  )
 );
 
 const paginatedGroups = computed(() =>
@@ -684,7 +698,11 @@ $border: #e5e7eb;
     display: flex;
     align-items: center;
     padding: 20px;
-    background: linear-gradient(135deg, rgba($primary, 0.05), rgba($secondary, 0.05));
+    background: linear-gradient(
+      135deg,
+      rgba($primary, 0.05),
+      rgba($secondary, 0.05)
+    );
     border-bottom: 1px solid $border;
 
     .header-content {
