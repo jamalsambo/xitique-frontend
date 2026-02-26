@@ -1,12 +1,7 @@
 {
   "extends": "@quasar/app-vite/tsconfig-preset",
   "compilerOptions": {
-    "baseUrl": ".",
-    "target": "es6",
-    "module": "esnext",
-    "lib": ["esnext", "webworker"],
-    "strict": true,
-    "moduleResolution": "node"
+    "baseUrl": "."
   },
   "exclude": [
     "./dist",
