@@ -12,7 +12,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 // Este componente é bem simples e reutilizável
 </script>
 

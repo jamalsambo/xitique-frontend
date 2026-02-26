@@ -185,7 +185,7 @@
                           </div>
                         </div>
                         <div class="payment-amount">
-                          {{ formatCurrency(nextPayments.payment?.amountPaid) }}
+                          {{ formatCurrency(nextPayments.payment?.amountPaid?? 0) }}
                           MT
                         </div>
                       </div>
@@ -216,7 +216,7 @@
                           </div>
                         </div>
                         <div class="payment-amount payment-amount-warning">
-                          {{ formatCurrency(nextPayments.loanPayment?.amount) }}
+                          {{ formatCurrency(nextPayments.loanPayment?.amount?? 0) }}
                           MT
                         </div>
                       </div>

@@ -179,7 +179,7 @@ defineProps({
   },
   interestRate: {
     type: Number,
-    required: true,
+    required: false,
   },
 });
 

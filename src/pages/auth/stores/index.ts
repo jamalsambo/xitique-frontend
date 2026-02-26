@@ -9,6 +9,15 @@ interface User {
   role: string;
 }
 
+export interface Log {
+  id: string;
+  group: string;
+  type: string;
+  createdAt: string;
+  amount: number;
+  label: string
+}
+
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null as User | null,
@@ -22,7 +31,7 @@ export const useAuthStore = defineStore('auth', {
     otpExpiresAt: <number | null>null,
     nextStep: <string | null>null,
 
-    logs: [],
+    logs: [] as Log[],
   }),
 
   getters: {

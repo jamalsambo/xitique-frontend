@@ -1,10 +1,20 @@
 import { defineStore } from 'pinia';
 import { api } from 'boot/axios';
 
+interface Rule {
+  name: string;
+  enabled: boolean;
+  id: string;
+  value: string;
+  code: string;
+  value_type: string;
+  description: string
+}
+
 export const useRuleStore = defineStore('rule', {
   state: () => ({
     loading: false,
-    rules: [],
+    rules: [] as Rule[],
     error: null as string | null,
   }),
   getters: {},
@@ -28,7 +38,7 @@ export const useRuleStore = defineStore('rule', {
     async toggleRule(
       ruleId: string,
       groupId: string,
-      enabled: string,
+      enabled: boolean,
       ruleValue: string
     ) {
       this.loading = true;

@@ -2,11 +2,25 @@
 import { defineStore } from 'pinia';
 import { api } from 'boot/axios';
 
+export interface Group {
+  name: string
+}
+export interface Loans {
+  id:string;
+  name:string;
+paidInstallments: number;
+installments: number;
+progress: number;
+totalPaid: number;
+amount_requested: number;
+group: Group
+}
+
 export const useLoanStore = defineStore('loan', {
   state: () => ({
     loading: false,
 
-    loans: [] as unknown[],
+    loans: [] as Loans[],
     groupLoans: [] as unknown[],
 
     // controla o limit no frontend

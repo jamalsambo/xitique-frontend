@@ -187,7 +187,7 @@ import { useRoute } from 'vue-router';
 // Variables
 const ruleStore = useRuleStore();
 const route = useRoute();
-const { id } = route.params;
+const id = route.params.id as string;
 
 // Computed
 const rules = computed(() => ruleStore.rules);
@@ -198,7 +198,7 @@ onMounted(async () => {
 });
 
 // Methods
-const toggleRule = async (rule: any, enabled: boolean) => {
+const toggleRule = async (rule: {enabled: boolean, id: string, value: string}, enabled: boolean) => {
   rule.enabled = enabled;
 
   try {
@@ -208,7 +208,7 @@ const toggleRule = async (rule: any, enabled: boolean) => {
   }
 };
 
-const updateRuleValue = async (rule: any) => {
+const updateRuleValue = async (rule: {enabled: boolean, value: string, id: string}) => {
   if (!rule.enabled) return;
 
   try {
@@ -218,7 +218,7 @@ const updateRuleValue = async (rule: any) => {
   }
 };
 
-const getRuleSuffix = (rule: any): string => {
+const getRuleSuffix = (rule: {code: string}): string => {
   const suffixes: Record<string, string> = {
     'max_members': 'membros',
     'min_contribution': 'MT',
@@ -228,7 +228,7 @@ const getRuleSuffix = (rule: any): string => {
   return suffixes[rule.code] || '';
 };
 
-const getRuleHint = (rule: any): string => {
+const getRuleHint = (rule: {code: string}): string => {
   const hints: Record<string, string> = {
     'max_members': 'Número máximo de membros permitidos',
     'min_contribution': 'Contribuição mínima por ciclo',
@@ -238,7 +238,7 @@ const getRuleHint = (rule: any): string => {
   return hints[rule.code] || '';
 };
 
-const getRuleInfo = (rule: any): string => {
+const getRuleInfo = (rule: {code: string}): string => {
   const infos: Record<string, string> = {
     'max_members': 'Limite máximo de participantes no grupo',
     'min_contribution': 'Valor mínimo que cada membro deve contribuir',

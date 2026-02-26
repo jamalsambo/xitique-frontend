@@ -66,7 +66,7 @@
                     <GroupNextPayouts
                       :next-received="nextReceived"
                       :loading="payoutScheduleStore.loading"
-                      :error="payoutScheduleStore.error"
+                      :error="payoutScheduleStore.error ?? 'Erro'"
                     />
                   </q-card-section>
                 </q-card>
@@ -122,7 +122,7 @@
                     <q-tab-panel name="loans" class="tab-panel">
                       <TabLoans
                         :loans="groupLoans"
-                        :interest-rate="group.interestRate"
+                        :interest-rate="group.interestRate ?? undefined"
                         @toggle-loan="toggleLoan"
                         @pay-installment="selectedRowPaidLoan"
                       />
@@ -165,7 +165,7 @@
         <ModalRequestLoan
           v-model="showLoanModal"
           :form="loanForm"
-          :interest-rate="group.interestRate"
+          :interest-rate="group.interestRate ?? undefined"
           :is-owner="group.isOwner"
           @before-hide="resetLoanForm"
           @update:form="loanForm = $event"
@@ -203,12 +203,15 @@
         <!-- Group Rules Modal -->
         <ModalGroupRules
           v-model="showGroupRulesModal"
-          :rules="group.rules"
+          :rules="group.groupRules"
           :group-name="group.name"
         />
 
         <!-- Cycle Details Modal -->
-        <ModalCycleDetails v-model="cycleModal.show" :cycle="cycleModal.data" />
+        <ModalCycleDetails
+          v-model="cycleModal.show"
+          :cycle="cycleModal.data ?? undefined"
+        />
 
         <!-- Floating Orbs -->
         <div class="orb orb-1"></div>
@@ -261,7 +264,7 @@ const loanStore = useLoanStore();
 const paymentStore = usePaymentStore();
 const userStore = useUserStore();
 
-const { id } = route.params;
+const id = route.params.id as string;
 
 // ============== REFS ==============
 const tab = ref('members');
@@ -284,6 +287,22 @@ const userFinancialStats = ref({
   avgPaymentDelay: 0,
 });
 
+interface Loan {
+  id: string;
+  amount_requested: number;
+  installments: unknown[];
+  purpose: string;
+  status: string;
+}
+
+export interface ScheduleItem {
+  product_name: string;
+  category: string;
+  target_quantity: string; // ⚠️ se for número, mude para number
+  price: string; // ⚠️ se for número, mude para number
+  group_id: string;
+}
+
 // Members
 const showAddMemberModal = ref(false);
 const memberSearchQuery = ref('');
@@ -295,7 +314,7 @@ const showLoanModal = ref(false);
 const showPaidLoadModal = ref(false);
 const loanForm = ref({
   id: '',
-  amount: null,
+  amount: 0,
   duration: 12,
   reason: '',
   interest: 0,
@@ -305,7 +324,7 @@ const loanForm = ref({
 
 // Items
 const showMyItemsModal = ref(false);
-const userItems = ref([]);
+const userItems = ref<ScheduleItem[]>([]); // ✅
 const newItemForm = ref({
   product_name: '',
   category: '',
@@ -421,7 +440,7 @@ const addNewItem = async () => {
     return;
   }
 
-  const item = {
+  const item: ScheduleItem = {
     product_name: newItemForm.value.product_name,
     category: newItemForm.value.category,
     target_quantity: newItemForm.value.target_quantity,
@@ -434,7 +453,8 @@ const addNewItem = async () => {
     userItems.value.push(item);
     resetItemsForm();
     notifySuccess('Item adicionado com sucesso!');
-  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     notifyError(error.message || 'Erro ao adicionar item');
   }
 };
@@ -444,7 +464,8 @@ const removeItem = async (index: number, itemId: string) => {
     await payoutScheduleStore.removeUserItem(itemId);
     userItems.value.splice(index, 1);
     notifySuccess('Item removido!');
-  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     notifyError(error.message || 'Erro ao remover item');
   }
 };
@@ -476,7 +497,7 @@ const searchMembersDatabase = async () => {
     const memberIds = new Set(members.value.map((m) => m.member_id));
     const results = await userStore.searchUsers(memberSearchQuery.value);
     searchResults.value = (results || []).filter(
-      (user: { id: any }) => !memberIds.has(user.id)
+      (user: { id: string }) => !memberIds.has(user.id)
     );
   } catch (error) {
     console.error('Erro ao buscar membros:', error);
@@ -486,7 +507,7 @@ const searchMembersDatabase = async () => {
   }
 };
 
-const selectMemberFromSearch = (member: any) => {
+const selectMemberFromSearch = () => {
   memberSearchQuery.value = '';
   searchResults.value = [];
 };
@@ -501,7 +522,8 @@ const addMemberToGroup = async (memberId: string) => {
     notifySuccess('Membro adicionado com sucesso!');
     showAddMemberModal.value = false;
     resetAddMemberForm();
-  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     notifyError(error.message || 'Erro ao adicionar membro');
   }
 };
@@ -510,7 +532,7 @@ const addMemberToGroup = async (memberId: string) => {
 const resetLoanForm = () => {
   loanForm.value = {
     id: '',
-    amount: null,
+    amount: 0,
     duration: 12,
     reason: '',
     interest: 0,
@@ -521,7 +543,7 @@ const resetLoanForm = () => {
 
 const calculateInterest = () => {
   const amount = loanForm.value.amount || 0;
-  const interestRate = group.value.interestRate / 100;
+  const interestRate = (group.value.interestRate ?? 0) / 100;
   loanForm.value.interest = parseFloat((amount * interestRate).toFixed(2));
   loanForm.value.total = parseFloat(
     (amount + loanForm.value.interest).toFixed(2)
@@ -545,12 +567,13 @@ const submitLoanRequest = async () => {
     notifySuccess('Empréstimo solicitado com sucesso!');
     showLoanModal.value = false;
     resetLoanForm();
-  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     notifyError(error.message || 'Erro ao solicitar empréstimo');
   }
 };
 
-const toggleLoan = (loan: any) => {
+const toggleLoan = (loan: Loan) => {
   loanForm.value.id = loan.id;
   loanForm.value.amount = loan.amount_requested;
   loanForm.value.duration = loan.installments.length;
@@ -569,7 +592,8 @@ const changeLoanStatus = async () => {
     await loanStore.fetchGroupLoans(id);
     showLoanModal.value = false;
     resetLoanForm();
-  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     notifyError(error.message || 'Erro ao solicitar empréstimo');
   }
 };
@@ -599,26 +623,29 @@ const onSave = async () => {
     }
     await loanStore.fetchGroupLoans(id);
     showPaidLoadModal.value = false;
-  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     notifyError(error.message);
   }
 };
 
-const handledPayCycle = async (cycle: any) => {
+const handledPayCycle = async (cycle: { cycleNumber: number }) => {
   try {
     await paymentStore.create({ cycle_number: cycle.cycleNumber });
     notifySuccess('Pagamento enviando, aguarde a aprovação do gestor');
-  } catch (error: string) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     notifyError(error);
   }
 };
 
-const handledPayConfirmation = async (cycle: any) => {
+const handledPayConfirmation = async (cycle: { paymentId: string }) => {
   try {
     await paymentStore.update(cycle.paymentId, { status: 'Pago' });
     notifySuccess('Pagamento confirmado');
     await paymentStore.fetchPaymentCycles(id);
-  } catch (error: string) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     notifyError(error);
   }
 };
@@ -626,8 +653,7 @@ const handledPayConfirmation = async (cycle: any) => {
 // ============== NAVIGATION FUNCTIONS ==============
 const goToSettings = () => router.push(`/groups/${id}/settings`);
 
-const viewCycleDetails = (cycle: any) => {
-  cycleModal.value.data = cycle;
+const viewCycleDetails = (cycle: { cycleNumber: number }) => {
   cycleModal.value.show = true;
   router.push(`/groups/${id}/cycle/${cycle.cycleNumber}`);
 };

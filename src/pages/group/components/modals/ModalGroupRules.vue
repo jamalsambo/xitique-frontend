@@ -46,7 +46,7 @@ defineProps({
     required: true,
   },
   rules: {
-    type: String,
+    type: Array,
     default: null,
   },
   groupName: {

@@ -434,6 +434,7 @@ const clearFilters = (): void => {
   currentPage.value = 1;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const addGroup = (data: any): void => {
   groups.value.push({
     id: Date.now(),
