@@ -10,14 +10,17 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
+        name: 'home',
         component: () => import('src/pages/home/pages/HomePage.vue'),
       },
       {
         path: '/contributions',
+        name: 'contributions',
         component: () => import('src/pages/ContributionsPage.vue'),
       },
       {
         path: '/settings',
+        name: 'settings',
         component: () => import('src/pages/SettingsPage.vue'),
       },
       ...groupRoutes,
