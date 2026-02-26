@@ -50,7 +50,7 @@
                       :group="group"
                       :balance="balance"
                       @go-to-settings="goToSettings"
-                      @show-loan-modal="showLoanModal = true"
+                      @show-loan-modal="handledShowLoanModal"
                       @show-items-modal="showMyItemsModal = true"
                     />
                   </q-card-section>
@@ -424,7 +424,7 @@ const loadUserItems = async () => {
     await payoutScheduleStore.fetchUserItem(id);
     userItems.value = payoutScheduleStore.userItems;
   } catch (error: unknown) {
-     // Garantir que error é uma instância de Error
+    // Garantir que error é uma instância de Error
     if (error instanceof Error) {
       notifyError(error.message);
     } else {
@@ -548,7 +548,7 @@ const addMemberToGroup = async (memberId: string) => {
     showAddMemberModal.value = false;
     resetAddMemberForm();
   } catch (error: unknown) {
-     // Garantir que error é uma instância de Error
+    // Garantir que error é uma instância de Error
     if (error instanceof Error) {
       notifyError(error.message);
     } else {
@@ -608,6 +608,10 @@ const submitLoanRequest = async () => {
   }
 };
 
+const handledShowLoanModal = () => {
+  showLoanModal.value = true;
+};
+
 const toggleLoan = (loan: Loan) => {
   loanForm.value.id = loan.id;
   loanForm.value.amount = loan.amount_requested;
@@ -629,7 +633,7 @@ const changeLoanStatus = async () => {
     resetLoanForm();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: unknown) {
-     // Garantir que error é uma instância de Error
+    // Garantir que error é uma instância de Error
     if (error instanceof Error) {
       notifyError(error.message);
     } else {
@@ -643,10 +647,15 @@ interface LoanInstallment {
   loanId: string;
   amount: number;
   number: number;
-  status: string ; // ou 'Pago' | 'Pendente' se tiver enum
+  status: string; // ou 'Pago' | 'Pendente' se tiver enum
 }
 
-const selectedRowPaidLoan = ({ loanId, amount, number, status }: LoanInstallment) => {
+const selectedRowPaidLoan = ({
+  loanId,
+  amount,
+  number,
+  status,
+}: LoanInstallment) => {
   showPaidLoadModal.value = true;
   installmentAmount.value = amount;
   installmentNumber.value = number;
