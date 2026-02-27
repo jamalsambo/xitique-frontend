@@ -47,6 +47,10 @@ const routes: RouteRecordRaw[] = [
     component: () => import('src/pages/auth/pages/ForgerPassPage.vue'),
     meta: { guestOnly: true },
   },
+  {
+    path: '/terms',
+    component: () => import('pages/TermsOfUse.vue'),
+  },
   // Always leave this as last one,
   // but you can also remove it
   {

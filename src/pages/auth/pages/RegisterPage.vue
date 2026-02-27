@@ -181,11 +181,13 @@
                       <template v-slot:default>
                         <span class="terms-text">
                           Li e concordo com os
-                          <a href="#" class="terms-link">Termos de Serviço</a>
+                          <router-link to="/terms" class="terms-link">
+                            Termos de Serviço
+                          </router-link>
                           e
-                          <a href="#" class="terms-link"
-                            >Política de Privacidade</a
-                          >
+                          <router-link to="/terms" class="terms-link">
+                            Política de Privacidade
+                          </router-link>
                         </span>
                       </template>
                     </q-checkbox>
