@@ -102,14 +102,7 @@
           class="paid-badge"
         />
 
-        <!-- Expired Badge -->
-        <q-badge
-          v-else-if="isCycleExpired(cycle)"
-          label="Expirado"
-          color="warning"
-          class="expired-badge"
-        />
-
+       
         <!-- Details Button -->
         <q-btn
           flat
@@ -156,8 +149,9 @@ const isCycleExpired = (cycle) => {
 const isCyclePaid = (cycle) => {
   if (!cycle) return false;
 
-  return (
+  console.log(cycle)
 
+  return (
     cycle.paid === 'Pago'
   );
 };
@@ -166,7 +160,6 @@ const isCyclePendent = (cycle) => {
   if (!cycle) return false;
 
   return (
-
     cycle.paid === 'Pendente'
   );
 };

@@ -11,7 +11,6 @@
       @click="$emit('add-member')"
     />
   </q-card-section>
-
   <!-- Members List -->
   <q-list separator>
     <q-item v-for="m in members" :key="m.id" class="q-py-md">
@@ -57,6 +56,7 @@
           rounded
           size="sm"
           no-caps
+           @click="$emit('confirm-payout', m)"
         />
         <q-icon v-else name="verified" color="positive" size="sm" />
       </q-item-section>
@@ -72,7 +72,7 @@ defineProps({
   }
 });
 
-defineEmits(['add-member']);
+defineEmits(['add-member', 'confirm-payout']);
 </script>
 
 <style scoped>

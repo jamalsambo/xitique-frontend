@@ -56,6 +56,9 @@ export interface Group {
   balance: number;
   interestRate: number | null;
   isOwner: boolean;
+  totalMembers: number;
+  groupPayService: number;
+  isCyclePaid: boolean;
 }
 
 export interface GroupType {
@@ -91,15 +94,15 @@ export interface Groups {
   payout_trigger: string | null;
   created_at: string;
 
-  type: GroupType;               // Subobjeto tipo do grupo
-  groupMembers: GroupMember[];   // Lista de membros do grupo
+  type: GroupType; // Subobjeto tipo do grupo
+  groupMembers: GroupMember[]; // Lista de membros do grupo
 
-  progress: number;              // Percentual de progresso (ex.: 9)
-  cycleName: string;             // Nome do ciclo (ex.: "Mensal")
+  progress: number; // Percentual de progresso (ex.: 9)
+  cycleName: string; // Nome do ciclo (ex.: "Mensal")
   totalMembers: number;
   paidMembers: number;
   pendingMembers: number;
-   balance: number;
+  balance: number;
 }
 
 export const useGroupStore = defineStore('group', {
@@ -107,7 +110,7 @@ export const useGroupStore = defineStore('group', {
     loading: false,
 
     groups: [] as Groups[],
-   group: {} as Group,
+    group: {} as Group,
     groupTypes: [],
 
     // controla o limit no frontend

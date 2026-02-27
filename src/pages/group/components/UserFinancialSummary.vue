@@ -201,7 +201,7 @@
                 </div>
 
                 <div class="card-value groups-value">
-                  {{ stats.activeGroupsCount }}
+                  {{ formatCurrency(groupPayService ?? 0) }}
                 </div>
 
                 <!-- Group Stats -->
@@ -209,17 +209,13 @@
                   <div class="stat-item">
                     <span class="stat-label">Investimento do ciclo</span>
                     <span class="stat-count">{{
-                      stats.isCyclePaid ? 'Pago' : 'Pendente'
+                      isCyclePaid ? 'Pago' : 'Pendente'
                     }}</span>
                   </div>
                   <q-separator />
                   <div class="stat-item">
                     <span class="stat-label">Numeto membros</span>
-                    <span class="stat-count">{{ stats.totalMembers }}</span>
-                  </div>
-                  <div class="stat-item">
-                    <span class="stat-label">Investimento</span>
-                    <span class="stat-count">{{ stats.groupPayService }}</span>
+                    <span class="stat-count">{{ totalMembers }}</span>
                   </div>
                 </div>
               </q-card-section>
@@ -244,10 +240,19 @@ const props = defineProps({
       activeGroupsCount: 0,
       pendingPaymentsCount: 0,
       pendingLoansCount: 0,
-      totalMembers: 0,
-      groupPayService: 0,
-      isCyclePaid: false,
     }),
+  },
+  totalMembers: {
+    type: Number,
+    require: true,
+  },
+  groupPayService: {
+    type: Number,
+    require: true,
+  },
+  isCyclePaid: {
+    type: Boolean,
+    require: true,
   },
 });
 

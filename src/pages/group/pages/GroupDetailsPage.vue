@@ -30,7 +30,12 @@
               <h3 class="section-title">Informações Financeiras Pessoais</h3>
               <q-icon name="account_balance" size="24px" color="primary" />
             </div>
-            <UserFinancialSummary :stats="userFinancialStats" />
+            <UserFinancialSummary
+              :stats="userFinancialStats"
+              :total-members="group.totalMembers"
+              :group-pay-service="group.groupPayService"
+              :is-cycle-paid="group.isCyclePaid"
+            />
           </div>
 
           <!-- Group Information Section -->
@@ -66,7 +71,6 @@
                     <GroupNextPayouts
                       :next-received="nextReceived"
                       :loading="payoutScheduleStore.loading"
-                      :error="payoutScheduleStore.error ?? 'Erro'"
                     />
                   </q-card-section>
                 </q-card>
@@ -115,6 +119,7 @@
                       <TabMembers
                         :members="members"
                         @add-member="showAddMemberModal = true"
+                        @confirm-payout="handledPayOutConfirmation"
                       />
                     </q-tab-panel>
 
@@ -233,6 +238,7 @@ import { useGroupMemberStore } from '../store/group-member.store';
 import { usePaymentStore } from 'src/stores/payment-store';
 import { useLoanStore } from 'src/pages/loan/store';
 import { useUserStore } from 'src/pages/user/store';
+import { usePayoutConfirmationStore } from 'src/stores/payout-confirmation.store';
 
 // Composables
 import useNotify from 'src/composables/UseNotify';
@@ -263,6 +269,7 @@ const groupMemberStore = useGroupMemberStore();
 const loanStore = useLoanStore();
 const paymentStore = usePaymentStore();
 const userStore = useUserStore();
+const payoutConfirmationStore = usePayoutConfirmationStore();
 
 const id = route.params.id as string;
 
@@ -270,22 +277,6 @@ const id = route.params.id as string;
 const tab = ref('members');
 
 // User Financial Stats
-const userFinancialStats = ref({
-  totalBalance: 0,
-  totalContributed: 0,
-  totalReceived: 0,
-  loansRequested: 0,
-  interestAccumulated: 0,
-  totalLoansWithInterest: 0,
-  loansPaid: 0,
-  remainingDebt: 0,
-  activeGroupsCount: 0,
-  pendingPaymentsCount: 0,
-  pendingLoansCount: 0,
-  creditScore: 0,
-  defaultRate: 100,
-  avgPaymentDelay: 0,
-});
 
 interface Loan {
   id: string;
@@ -379,6 +370,26 @@ const hasAllowLoans = computed(
       (p: { rule: { code: string } }) => p?.rule?.code === 'ALLOW_LOANS'
     ) ?? false
 );
+
+const userFinancialStats = ref({
+  totalBalance: 0,
+  totalContributed: 0,
+  totalReceived: 0,
+  loansRequested: 0,
+  interestAccumulated: 0,
+  totalLoansWithInterest: 0,
+  loansPaid: 0,
+  remainingDebt: 0,
+  activeGroupsCount: 0,
+  pendingPaymentsCount: 0,
+  pendingLoansCount: 0,
+  creditScore: 0,
+  defaultRate: 100,
+  avgPaymentDelay: 0,
+  totalMembers: group.value.totalMembers,
+  groupPayService: group.value.totalMembers,
+  isCyclePaid: group.value.totalMembers,
+});
 
 // ============== LIFECYCLE ==============
 onMounted(async () => {
@@ -558,6 +569,21 @@ const addMemberToGroup = async (memberId: string) => {
   }
 };
 
+const handledPayOutConfirmation = async (m: { member_id: string }) => {
+  try {
+    await payoutConfirmationStore.create(id, { member_id: m.member_id });
+    await groupStore.fetchGroup(id);
+  } catch (error: unknown) {
+    // Garantir que error é uma instância de Error
+    if (error instanceof Error) {
+      notifyError(error.message);
+    } else {
+      // Caso seja outro tipo (string, object, etc)
+      notifyError(String(error));
+    }
+  }
+};
+
 // ============== LOAN FUNCTIONS ==============
 const resetLoanForm = () => {
   loanForm.value = {
@@ -688,7 +714,10 @@ const onSave = async () => {
 
 const handledPayCycle = async (cycle: { cycleNumber: number }) => {
   try {
-    await paymentStore.create({ cycle_number: cycle.cycleNumber });
+    await paymentStore.create({
+      group_id: id,
+      cycle_number: cycle.cycleNumber,
+    });
     notifySuccess('Pagamento enviando, aguarde a aprovação do gestor');
   } catch (error: unknown) {
     // Garantir que error é uma instância de Error
