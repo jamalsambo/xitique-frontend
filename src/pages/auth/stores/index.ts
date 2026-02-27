@@ -7,7 +7,7 @@ import { LocalStorage } from 'quasar';
 interface User {
   id: string;
   role: string;
-  name: string
+  name: string;
 }
 
 export interface Log {
@@ -16,7 +16,7 @@ export interface Log {
   type: string;
   createdAt: string;
   amount: number;
-  label: string
+  label: string;
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -27,6 +27,7 @@ export const useAuthStore = defineStore('auth', {
     error: <string | null>null,
 
     otpSent: false,
+    otpCode: <string | null>null,
     otpPhone: <string | null>null,
     otpAttempts: 0,
     otpExpiresAt: <number | null>null,
@@ -97,6 +98,7 @@ export const useAuthStore = defineStore('auth', {
         this.otpSent = true;
         this.otpAttempts = 0;
         this.nextStep = response.data.nextStep;
+        this.otpCode = response.data.message;
 
         this.otpExpiresAt = Date.now() + 10 * 60 * 1000;
       } catch (err: any) {
@@ -211,6 +213,7 @@ export const useAuthStore = defineStore('auth', {
         // Armazenar telefone para verificação OTP
         this.otpPhone = phone;
         this.otpSent = true;
+        this.otpCode = response.data.message;
         this.otpAttempts = 0;
         this.otpExpiresAt = Date.now() + 10 * 60 * 1000;
 

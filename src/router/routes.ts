@@ -41,6 +41,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import('src/pages/auth/pages/VerifyOtpPage.vue'),
     meta: { guestOnly: true },
   },
+  {
+    path: '/forgot-password',
+    component: () => import('src/pages/auth/pages/ForgerPassPage.vue'),
+    meta: { guestOnly: true },
+  },
   // Always leave this as last one,
   // but you can also remove it
   {

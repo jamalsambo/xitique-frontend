@@ -25,7 +25,7 @@
               <!-- OTP Input -->
               <div class="otp-input-group">
                 <label class="input-label">Código de Verificação</label>
-                <p class="otp-instruction">Insira os 6 dígitos do SMS</p>
+                <p class="otp-instruction">Insira os 6 dígitos {{ auth.otpCode }}</p>
 
                 <!-- Individual Digit Inputs -->
                 <div class="otp-inputs">
