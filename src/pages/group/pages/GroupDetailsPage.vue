@@ -393,13 +393,16 @@ const userFinancialStats = ref({
 
 // ============== LIFECYCLE ==============
 onMounted(async () => {
-  await groupStore.fetchGroup(id);
-  await payoutScheduleStore.fetchNextReceived(id, 1);
-  await groupMemberStore.fetchGroupMembers(id);
-  await loanStore.fetchGroupLoans(id);
-  await paymentStore.fetchPaymentCycles(id);
-  await loadUserItems();
-  await loadUserFinancialStats();
+  await groupStore.fetchGroup(id),
+  await Promise.all([
+    groupStore.fetchGroup(id),
+    payoutScheduleStore.fetchNextReceived(id, 1),
+    groupMemberStore.fetchGroupMembers(id),
+    loanStore.fetchGroupLoans(id),
+    paymentStore.fetchPaymentCycles(id),
+    loadUserItems(),
+    loadUserFinancialStats(),
+  ]);
 });
 
 // ============== WATCHERS ==============
