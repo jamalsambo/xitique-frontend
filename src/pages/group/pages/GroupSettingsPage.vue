@@ -86,7 +86,7 @@
 
                   <!-- Rule Value Input (Slide Transition) -->
                   <q-slide-transition>
-                    <div v-if="rule.enabled && rule.value_type === 'NUMBER'" class="rule-input-section">
+                    <div v-if="rule.enabled" class="rule-input-section">
                       <q-separator class="q-my-md" />
 
                       <div class="rule-input">
