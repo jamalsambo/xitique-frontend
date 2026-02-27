@@ -113,9 +113,7 @@
                   {{ formatCurrency(stats.totalReceived) }}
                 </div>
 
-                <div class="card-subtitle">
-                  De ciclos completados
-                </div>
+                <div class="card-subtitle">De ciclos completados</div>
 
                 <!-- Badge -->
                 <q-badge
@@ -142,33 +140,40 @@
                   <q-avatar
                     rounded
                     :color="stats.remainingDebt > 0 ? 'red-1' : 'green-1'"
-                    :text-color="stats.remainingDebt > 0 ? 'danger' : 'positive'"
+                    :text-color="
+                      stats.remainingDebt > 0 ? 'danger' : 'positive'
+                    "
                     :icon="stats.remainingDebt > 0 ? 'warning' : 'check_circle'"
                     size="md"
                   />
                   <div class="card-title">
-                    {{ stats.remainingDebt > 0 ? 'Dívida Restante' : 'Sem Dívidas' }}
+                    {{
+                      stats.remainingDebt > 0
+                        ? 'Dívida Restante'
+                        : 'Sem Dívidas'
+                    }}
                   </div>
                 </div>
 
                 <div
                   class="card-value"
-                  :class="stats.remainingDebt > 0 ? 'text-danger' : 'text-positive'"
+                  :class="
+                    stats.remainingDebt > 0 ? 'text-danger' : 'text-positive'
+                  "
                 >
                   {{ formatCurrency(Math.abs(stats.remainingDebt)) }}
                 </div>
 
                 <div class="card-subtitle">
-                  {{ stats.remainingDebt > 0
-                    ? '⚠️ Pagamentos pendentes'
-                    : '✓ Tudo quitado' }}
+                  {{
+                    stats.remainingDebt > 0
+                      ? '⚠️ Pagamentos pendentes'
+                      : '✓ Tudo quitado'
+                  }}
                 </div>
 
                 <!-- Status Indicator -->
-                <div
-                  v-if="stats.remainingDebt > 0"
-                  class="alert-box q-mt-md"
-                >
+                <div v-if="stats.remainingDebt > 0" class="alert-box q-mt-md">
                   <q-icon name="info" size="xs" />
                   <span>Regularize seus pagamentos</span>
                 </div>
@@ -192,27 +197,29 @@
                     icon="hub"
                     size="md"
                   />
-                  <div class="card-title">Grupos Ativos</div>
+                  <div class="card-title">Pagamento de Serviço</div>
                 </div>
 
                 <div class="card-value groups-value">
                   {{ stats.activeGroupsCount }}
                 </div>
 
-                <div class="card-subtitle">
-                  Participação ativa
-                </div>
-
                 <!-- Group Stats -->
                 <div class="group-stats q-mt-md">
                   <div class="stat-item">
-                    <span class="stat-label">Pagamentos</span>
-                    <span class="stat-count">{{ stats.pendingPaymentsCount }}</span>
+                    <span class="stat-label">Investimento do ciclo</span>
+                    <span class="stat-count">{{
+                      stats.isCyclePaid ? 'Pago' : 'Pendente'
+                    }}</span>
                   </div>
                   <q-separator />
                   <div class="stat-item">
-                    <span class="stat-label">Empréstimos</span>
-                    <span class="stat-count">{{ stats.pendingLoansCount }}</span>
+                    <span class="stat-label">Numeto membros</span>
+                    <span class="stat-count">{{ stats.totalMembers }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Investimento</span>
+                    <span class="stat-count">{{ stats.groupPayService }}</span>
                   </div>
                 </div>
               </q-card-section>
@@ -225,7 +232,6 @@
 </template>
 
 <script setup lang="ts">
-
 const props = defineProps({
   stats: {
     type: Object,
@@ -238,6 +244,9 @@ const props = defineProps({
       activeGroupsCount: 0,
       pendingPaymentsCount: 0,
       pendingLoansCount: 0,
+      totalMembers: 0,
+      groupPayService: 0,
+      isCyclePaid: false,
     }),
   },
 });
@@ -254,7 +263,9 @@ const formatCurrency = (value: number | string): string => {
 
 const getContributionRatio = (): number => {
   if (!props.stats.totalContributed || !props.stats.totalBalance) return 0;
-  const ratio = props.stats.totalContributed / (props.stats.totalContributed + props.stats.totalReceived);
+  const ratio =
+    props.stats.totalContributed /
+    (props.stats.totalContributed + props.stats.totalReceived);
   return Math.min(ratio, 1);
 };
 </script>

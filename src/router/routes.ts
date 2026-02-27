@@ -14,12 +14,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('src/pages/home/pages/HomePage.vue'),
       },
       {
-        path: '/contributions',
+        path: 'contributions',
         name: 'contributions',
         component: () => import('src/pages/ContributionsPage.vue'),
       },
       {
-        path: '/settings',
+        path: 'settings',
         name: 'settings',
         component: () => import('src/pages/SettingsPage.vue'),
       },
@@ -28,6 +28,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/login',
+    name: 'login',
     component: () => import('src/pages/auth/pages/LoginPage.vue'),
     meta: { guestOnly: true },
   },
