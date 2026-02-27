@@ -13,11 +13,11 @@
               <div class="otp-icon">
                 <q-icon name="verified_user" size="64px" />
               </div>
-              <h1 class="otp-title">Verificar Telefone</h1>
+              <!-- <h1 class="otp-title">Verificar Telefone</h1>
               <p class="otp-subtitle">
                 Insira o código enviado para
                 <strong>+258 {{ maskPhone(auth.otpPhone) }}</strong>
-              </p>
+              </p> -->
             </q-card-section>
 
             <!-- Form Section -->
@@ -25,7 +25,9 @@
               <!-- OTP Input -->
               <div class="otp-input-group">
                 <label class="input-label">Código de Verificação</label>
-                <p class="otp-instruction">Insira os 6 dígitos {{ auth.otpCode }}</p>
+                <h5 class="otp-instruction">
+                  Insira os 6 dígitos {{ auth.otpCode }}
+                </h5>
 
                 <!-- Individual Digit Inputs -->
                 <div class="otp-inputs">
@@ -129,10 +131,10 @@
           </q-card>
 
           <!-- Info Box -->
-          <div class="info-box q-mt-lg">
+          <!-- <div class="info-box q-mt-lg">
             <q-icon name="info" />
             <span>Verifique sua pasta de SPAM se não encontrar o SMS</span>
-          </div>
+          </div> -->
         </div>
 
         <!-- Floating Orbs -->
@@ -260,14 +262,15 @@ const handleResendOTP = async () => {
     console.error('Erro ao reenviar OTP:', error);
   }
 };
-const maskPhone = (phone: string | null): string => {
-  if (!phone) return '';
-  const cleaned = phone.replace(/\D/g, '');
-  // Formatar: 84 *** ****
-  return `${cleaned.substring(0, 2)} *** ${cleaned.substring(
-    cleaned.length - 4
-  )}`;
-};
+
+// const maskPhone = (phone: string | null): string => {
+//   if (!phone) return '';
+//   const cleaned = phone.replace(/\D/g, '');
+//   // Formatar: 84 *** ****
+//   return `${cleaned.substring(0, 2)} *** ${cleaned.substring(
+//     cleaned.length - 4
+//   )}`;
+// };
 
 const startTimer = () => {
   if (timerInterval) clearInterval(timerInterval);
@@ -498,9 +501,11 @@ $border: #e5e7eb;
   }
 
   .otp-instruction {
-    font-size: 13px;
-    color: #9ca3af;
-    margin: 0 0 20px 0;
+    background: #f5f7ff;
+    border-left: 4px solid #3b82f6;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-weight: 500;
   }
 }
 

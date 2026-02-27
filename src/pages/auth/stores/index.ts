@@ -187,6 +187,8 @@ export const useAuthStore = defineStore('auth', {
         // Renovar tempo de expiração
         this.otpExpiresAt = Date.now() + 10 * 60 * 1000;
 
+        this.otpCode = response.data.otp;
+
         return {
           success: true,
           message:
