@@ -37,10 +37,23 @@
           <q-item-label class="text-weight-bold">
             {{ loan.member }}
           </q-item-label>
+
           <q-item-label caption>
             Solicitado em {{ loan?.created_at }}
           </q-item-label>
-          <div class="q-mt-xs" style="width: 80%">
+
+          <!-- Valores do empréstimo -->
+          <q-item-label class="q-mt-xs text-primary text-weight-medium">
+            💰 Solicitado: {{ formatMoney(loan.amount_requested) }}
+          </q-item-label>
+
+          <q-item-label class="text-negative text-weight-medium">
+            💳 Total a pagar:
+            {{ loan.totalToPay }}
+          </q-item-label>
+
+          <!-- Barra de progresso -->
+          <div class="q-mt-sm" style="width: 80%">
             <q-linear-progress
               :value="
                 loan.paid / (loan.amount_requested + (loan.interest || 0))
@@ -87,7 +100,8 @@
 
               <q-item-section>
                 <q-item-label class="text-caption text-weight-medium">
-                  Parcela {{ index + 1 }} - {{ formatDate(installment.dueDate) }}
+                  Parcela {{ index + 1 }} -
+                  {{ formatDate(installment.dueDate) }}
                 </q-item-label>
               </q-item-section>
 
@@ -197,6 +211,13 @@ const formatDate = (dateString) => {
     day: '2-digit',
     month: 'short',
   });
+};
+
+const formatMoney = (value) => {
+  return new Intl.NumberFormat('pt-MZ', {
+    style: 'currency',
+    currency: 'MZN',
+  }).format(value);
 };
 
 defineEmits(['toggle-loan', 'pay-installment']);
