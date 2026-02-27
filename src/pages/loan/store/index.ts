@@ -3,17 +3,17 @@ import { defineStore } from 'pinia';
 import { api } from 'boot/axios';
 
 export interface Group {
-  name: string
+  name: string;
 }
 export interface Loans {
-  id:string;
-  name:string;
-paidInstallments: number;
-installments: number;
-progress: number;
-totalPaid: number;
-amount_requested: number;
-group: Group
+  id: string;
+  name: string;
+  paidInstallments: number;
+  installments: number;
+  progress: number;
+  totalPaid: number;
+  amount_requested: number;
+  group: Group;
 }
 
 export const useLoanStore = defineStore('loan', {
@@ -130,12 +130,12 @@ export const useLoanStore = defineStore('loan', {
       }
     },
 
-    async updateLoanPayment(loanId: string, body: object) {
+    async updateLoanPayment(paymentId: any, body: object) {
       this.loading = true;
       this.error = null;
 
       try {
-        const { data } = await api.patch(`/loan/${loanId}/payment`, body);
+        const { data } = await api.patch(`/loan/${paymentId.id}/payment`, body);
 
         return data;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

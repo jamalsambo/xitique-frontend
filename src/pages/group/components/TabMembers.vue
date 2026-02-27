@@ -56,7 +56,7 @@
           rounded
           size="sm"
           no-caps
-           @click="$emit('confirm-payout', m)"
+          @click="$emit('confirm-payout', m)"
         />
         <q-icon v-else name="verified" color="positive" size="sm" />
       </q-item-section>
@@ -69,7 +69,8 @@ defineProps({
   members: {
     type: Array,
     required: true,
-  }
+  },
+  
 });
 
 defineEmits(['add-member', 'confirm-payout']);

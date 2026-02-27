@@ -128,6 +128,8 @@
                       <TabLoans
                         :loans="groupLoans"
                         :interest-rate="group.interestRate ?? undefined"
+                        :user="auth.user ?? undefined"
+                        :is-owner="group.isOwner"
                         @toggle-loan="toggleLoan"
                         @pay-installment="selectedRowPaidLoan"
                       />
@@ -232,6 +234,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 // Stores
+import { useAuthStore } from 'src/pages/auth/stores';
 import { useGroupStore } from '../store';
 import { usePayoutScheduleStore } from 'src/stores/payout-schedule.store';
 import { useGroupMemberStore } from '../store/group-member.store';
@@ -270,6 +273,7 @@ const loanStore = useLoanStore();
 const paymentStore = usePaymentStore();
 const userStore = useUserStore();
 const payoutConfirmationStore = usePayoutConfirmationStore();
+const auth = useAuthStore();
 
 const id = route.params.id as string;
 
@@ -328,10 +332,12 @@ const paidLoadForm = ref({
   proof_url: '',
   status: '',
 });
+
+
 const installmentAmount = ref(0);
 const installmentNumber = ref(0);
 const installmentLoanId = ref('');
-const installmentStatus = ref('');
+const installmentStatus = ref<{ id: string } | null>(null);
 
 // Rules Modal
 const showGroupRulesModal = ref(false);
@@ -394,15 +400,15 @@ const userFinancialStats = ref({
 // ============== LIFECYCLE ==============
 onMounted(async () => {
   await groupStore.fetchGroup(id),
-  await Promise.all([
-    groupStore.fetchGroup(id),
-    payoutScheduleStore.fetchNextReceived(id, 1),
-    groupMemberStore.fetchGroupMembers(id),
-    loanStore.fetchGroupLoans(id),
-    paymentStore.fetchPaymentCycles(id),
-    loadUserItems(),
-    loadUserFinancialStats(),
-  ]);
+    await Promise.all([
+      groupStore.fetchGroup(id),
+      payoutScheduleStore.fetchNextReceived(id, 1),
+      groupMemberStore.fetchGroupMembers(id),
+      loanStore.fetchGroupLoans(id),
+      paymentStore.fetchPaymentCycles(id),
+      loadUserItems(),
+      loadUserFinancialStats(),
+    ]);
 });
 
 // ============== WATCHERS ==============
@@ -689,7 +695,7 @@ const selectedRowPaidLoan = ({
   installmentAmount.value = amount;
   installmentNumber.value = number;
   installmentLoanId.value = loanId;
-  installmentStatus.value = status;
+  installmentStatus.value = { id: status };
 };
 
 const onSave = async () => {
@@ -703,7 +709,7 @@ const onSave = async () => {
       };
       await loanStore.createLoanPayment(installmentLoanId.value, body);
     } else {
-      await loanStore.updateLoanPayment(installmentLoanId.value, {
+      await loanStore.updateLoanPayment(installmentStatus.value.id, {
         status: paidLoadForm.value.status,
       });
     }
