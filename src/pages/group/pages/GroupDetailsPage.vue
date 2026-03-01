@@ -728,6 +728,7 @@ const handledPayCycle = async (cycle: { cycleNumber: number }) => {
       cycle_number: cycle.cycleNumber,
     });
     notifySuccess('Pagamento enviando, aguarde a aprovação do gestor');
+    await  paymentStore.fetchPaymentCycles(id)
   } catch (error: unknown) {
     // Garantir que error é uma instância de Error
     if (error instanceof Error) {
