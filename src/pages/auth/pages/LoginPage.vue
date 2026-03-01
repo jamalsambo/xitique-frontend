@@ -6,7 +6,7 @@
         <div class="gradient-bg"></div>
 
         <div class="login-container">
-          <!-- Left Side - Branding & Message -->
+          <!-- Left Side - Branding & Message (Mobile: Hidden/Collapsed) -->
           <div class="left-section">
             <div class="brand-content">
               <!-- Logo/Brand -->
@@ -51,6 +51,14 @@
           <!-- Right Side - Login Form -->
           <div class="right-section">
             <div class="form-wrapper">
+              <!-- Mobile Logo (Visible only on mobile) -->
+              <div class="mobile-logo">
+                <div class="mobile-logo-icon">
+                  <q-icon name="savings" size="48px" />
+                </div>
+                <h1 class="mobile-logo-title">Xitique+</h1>
+              </div>
+
               <!-- Header -->
               <div class="form-header">
                 <h2 class="form-title">Bem-vindo de Volta</h2>
@@ -176,7 +184,7 @@
               </div>
 
               <!-- Footer Info -->
-              <div class="footer-info q-mt-xl">
+              <div class="footer-info q-mt-md">
                 <p class="footer-text">
                   ✓ Todos os seus dados estão protegidos com encriptação
                   avançada
@@ -331,23 +339,25 @@ $border: #e5e7eb;
   width: 100%;
   position: relative;
   z-index: 10;
+  align-items: center;
 
-  @media (max-width: 768px) {
+  // Mobile Layout
+  @media (max-width: 992px) {
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: 20px;
   }
 }
 
-// ============== LEFT SECTION ==============
+// ============== LEFT SECTION (Desktop) ==============
 .left-section {
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 40px;
 
-  @media (max-width: 768px) {
-    padding: 0;
-    text-align: center;
+  // Hide on tablets and mobile
+  @media (max-width: 992px) {
+    display: none;
   }
 }
 
@@ -370,12 +380,6 @@ $border: #e5e7eb;
     color: white;
     margin-bottom: 20px;
     box-shadow: 0 10px 30px rgba($primary, 0.2);
-
-    @media (max-width: 768px) {
-      width: 60px;
-      height: 60px;
-      margin: 0 auto 20px;
-    }
   }
 
   .brand-title {
@@ -387,10 +391,6 @@ $border: #e5e7eb;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-
-    @media (max-width: 768px) {
-      font-size: 32px;
-    }
   }
 
   .brand-subtitle {
@@ -468,9 +468,13 @@ $border: #e5e7eb;
   flex-direction: column;
   justify-content: center;
   animation: slideInRight 0.8s ease-out;
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
 
-  @media (max-width: 768px) {
+  @media (max-width: 992px) {
     animation: slideInUp 0.8s ease-out;
+    margin-top: 20px;
   }
 }
 
@@ -478,15 +482,60 @@ $border: #e5e7eb;
   width: 100%;
 }
 
+// Mobile Logo (Hidden on desktop)
+.mobile-logo {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+  text-align: center;
+
+  @media (max-width: 992px) {
+    display: flex;
+  }
+
+  .mobile-logo-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, $primary, $secondary);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-bottom: 12px;
+    box-shadow: 0 8px 24px rgba($primary, 0.2);
+  }
+
+  .mobile-logo-title {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(135deg, $primary, $secondary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+  }
+}
+
 // Form Header
 .form-header {
   margin-bottom: 30px;
+  text-align: center;
+
+  @media (max-width: 992px) {
+    margin-bottom: 20px;
+  }
 
   .form-title {
     font-size: 28px;
     font-weight: 700;
     color: $dark;
     margin: 0 0 8px 0;
+
+    @media (max-width: 992px) {
+      font-size: 24px;
+    }
   }
 
   .form-subtitle {
@@ -508,6 +557,14 @@ $border: #e5e7eb;
   &:hover {
     box-shadow: 0 20px 60px rgba(91, 114, 255, 0.1);
     border-color: rgba($primary, 0.2);
+  }
+
+  @media (max-width: 992px) {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
+
+    &:hover {
+      box-shadow: 0 10px 30px rgba(91, 114, 255, 0.08);
+    }
   }
 }
 
@@ -561,6 +618,13 @@ $border: #e5e7eb;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
   .remember-checkbox {
     font-size: 13px;
@@ -576,10 +640,16 @@ $border: #e5e7eb;
     text-decoration: none;
     font-weight: 600;
     transition: color 0.3s ease;
+    white-space: nowrap;
 
     &:hover {
       color: #0055aa;
       text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      width: 100%;
+      text-align: right;
     }
   }
 }
@@ -608,6 +678,10 @@ $border: #e5e7eb;
   &:disabled {
     opacity: 0.6;
   }
+
+  @media (max-width: 992px) {
+    font-size: 14px;
+  }
 }
 
 // Loading Message
@@ -617,6 +691,11 @@ $border: #e5e7eb;
   justify-content: center;
   color: $primary;
   font-weight: 600;
+  gap: 12px;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
 }
 
 // Error Banner
